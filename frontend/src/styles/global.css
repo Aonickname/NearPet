@@ -1,0 +1,1086 @@
+/* 구글 폰트 불러오기 */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Noto+Sans+KR:wght@300&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0a0a0a; /* 아주 깊은 검은색 */
+  color: #ffffff;
+  font-family: 'Noto Sans KR', sans-serif;
+  overflow-x: hidden;
+}
+
+.landing-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.06), transparent 25%),
+    linear-gradient(180deg, #070707 0%, #111111 100%);
+  padding: 28px 16px 64px;
+}
+
+.landing-hero {
+  max-width: 760px;
+  margin: 0 auto;
+  border-radius: 36px;
+  overflow: hidden;
+  background: #121212;
+  border: 1px solid #1f1f1f;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+.landing-topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  background: #2a211f;
+  color: #f3eee8;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.landing-image-wrap {
+  position: relative;
+  height: 360px;
+  overflow: hidden;
+}
+
+.landing-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.92) contrast(1.05);
+}
+
+.landing-card {
+  position: relative;
+  margin: -54px auto 0;
+  width: min(92%, 620px);
+  padding: 90px 28px 36px;
+  border-radius: 34px 34px 28px 28px;
+  background: linear-gradient(180deg, #f1dd87 0%, #dcc76e 100%);
+  color: #111;
+  text-align: center;
+}
+
+.landing-logo-badge {
+  position: absolute;
+  top: -56px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 112px;
+  height: 112px;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-style: italic;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+}
+
+.landing-card h1 {
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 800;
+}
+
+.landing-card p {
+  margin: 0 auto 28px;
+  max-width: 460px;
+  color: #2d2a24;
+  line-height: 1.6;
+}
+
+.landing-actions {
+  display: grid;
+  gap: 18px;
+}
+
+.landing-primary,
+.landing-secondary {
+  display: block;
+  width: 100%;
+  position: relative;
+  border-radius: 999px;
+  padding: 22px 24px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.landing-primary {
+  border: none;
+  background: #0f0f10;
+  color: #f6ebc0;
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.2);
+}
+
+.landing-secondary {
+  border: 1px solid rgba(17, 17, 17, 0.14);
+  background: rgba(255, 255, 255, 0.78);
+  color: #171717;
+}
+
+.landing-primary:hover,
+.landing-secondary:hover {
+  transform: translateY(-1px);
+}
+
+.landing-socials {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 26px;
+}
+
+.landing-social-link {
+  width: 58px;
+  height: 58px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: #151515;
+  border: 1px solid rgba(17, 17, 17, 0.14);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.landing-social-link svg {
+  width: 28px;
+  height: 28px;
+}
+
+.landing-button-icon {
+  position: absolute;
+  left: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-button-label {
+  display: block;
+  text-align: center;
+}
+
+.brand-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.brand-badge.naver {
+  background: #03c75a;
+  color: #fff;
+}
+
+.brand-badge.kakao {
+  background: #fee500;
+  color: #191919;
+}
+
+.brand-badge.nearpet {
+  background: #111;
+  color: #f6ebc0;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+
+.brand-badge.blog {
+  background: #fff;
+  color: #222;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 1rem;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+}
+
+.landing-footer-copy {
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(17, 17, 17, 0.12);
+  text-align: center;
+}
+
+.landing-footer-copy p {
+  margin: 0 auto;
+  color: #544d3f;
+  font-size: 0.82rem;
+  max-width: none;
+  width: 100%;
+  text-align: center;
+}
+
+.landing-footer-copy p + p {
+  margin-top: 6px;
+}
+
+/* 메인 대문 (Hero 섹션) */
+.hero {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+              url('https://images.unsplash.com/photo-1492691523567-6119283ad993?auto=format&fit=crop&w=1600&q=80');
+  background-size: cover;
+  background-position: center;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 5rem;
+  margin: 0;
+  letter-spacing: 5px;
+  font-style: italic;
+}
+
+.subtitle {
+  margin: 16px 0 0;
+  padding: 0 16px;
+  color: #f2ede8;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.hero-reserve-btn {
+  margin-top: 24px;
+  padding: 12px 28px;
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+}
+
+/* 사진 갤러리 (인스타 격자 스타일) */
+.gallery {
+  padding: 100px 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 15px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.item {
+  aspect-ratio: 1 / 1;
+  background-color: #222;
+  overflow: hidden;
+  position: relative;
+}
+
+.item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.5s;
+  filter: grayscale(30%);
+}
+
+.item img:hover {
+  transform: scale(1.1);
+  filter: grayscale(0%);
+}
+
+footer {
+  padding: 50px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #666;
+  border-top: 1px solid #222;
+}
+
+.main-header {
+  display: flex;
+  justify-content: space-between; /* 로고는 왼쪽, 메뉴는 오른쪽 */
+  align-items: center;
+  padding: 20px 50px;
+  background-color: rgba(0, 0, 0, 0.8); /* 약간 투명한 검정 */
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none; /* 밑줄 제거 */
+  margin-left: 20px;
+  font-size: 0.9rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.nav-links .auth-btn,
+.nav-links .admin-link {
+  margin-left: 0;
+}
+
+.auth-btn {
+  background: transparent;
+  border: 1px solid #333;
+  color: white;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.welcome-text {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7열(월~일)로 나누기 */
+  gap: 10px;
+  max-width: 400px;
+  margin-top: 20px;
+}
+
+.calendar-date {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #333;
+  cursor: pointer;
+}
+
+.calendar-date.available { color: #2ecc71; font-weight: bold; } /* 예약 가능 날짜 */
+.calendar-date.selected { background-color: #2ecc71; color: black; } /* 선택된 날짜 */
+
+
+/* 상단 메뉴바 (Header) 전체 스타일 */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 8%; /* 상하 패딩을 조금 줄여서 날씬하게 만듭니다. */
+  background-color: rgba(10, 10, 10, 0.95); /* 배경색과 투명도 조절 */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #1a1a1a; /* 은은한 하단 테두리 */
+}
+
+/* 🚨 기존의 .logo 스타일은 지우고, 이미지 전용 스타일을 만듭니다. */
+.header-logo-img {
+  height: 40px; /* 로고 높이를 상단바에 맞춰 조절하세요. */
+  width: auto; /* 비율에 맞춰 너비는 자동으로 계산됩니다. */
+  display: block; /* 여백 문제 해결 */
+}
+
+@media (max-width: 900px) {
+  .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    padding: 64px 16px;
+  }
+
+  footer {
+    padding: 40px 20px 48px;
+  }
+}
+
+@media (max-width: 640px) {
+  .landing-page {
+    padding: 10px 8px 22px;
+  }
+
+  .landing-hero {
+    border-radius: 24px;
+  }
+
+  .landing-topbar {
+    padding: 12px 14px;
+    gap: 10px;
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+
+  .landing-topbar span {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .landing-image-wrap {
+    height: min(52vw, 280px);
+  }
+
+  .landing-card {
+    width: calc(100% - 12px);
+    margin-top: -34px;
+    padding: 66px 16px 24px;
+    border-radius: 26px 26px 22px 22px;
+  }
+
+  .landing-logo-badge {
+    top: -42px;
+    width: 84px;
+    height: 84px;
+    font-size: 1.55rem;
+  }
+
+  .landing-card h1 {
+    font-size: 1.82rem;
+    line-height: 1.08;
+  }
+
+  .landing-card p {
+    margin-bottom: 18px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    max-width: 300px;
+  }
+
+  .landing-socials {
+    margin-bottom: 18px;
+  }
+
+  .landing-social-link {
+    width: 50px;
+    height: 50px;
+  }
+
+  .landing-actions {
+    gap: 12px;
+  }
+
+  .landing-primary,
+  .landing-secondary {
+    min-height: 66px;
+    padding: 16px 16px 16px 62px;
+    font-size: 0.94rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .landing-button-icon {
+    left: 12px;
+  }
+
+  .landing-button-label {
+    width: 100%;
+    text-align: center;
+  }
+
+  .landing-footer-copy {
+    margin-top: 18px;
+    padding-top: 16px;
+  }
+
+  .landing-footer-copy p {
+    font-size: 0.7rem;
+    line-height: 1.5;
+    word-break: break-word;
+  }
+
+  .main-header {
+    padding: 12px 14px;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .logo-link {
+    flex: 0 0 auto;
+  }
+
+  .header-logo-img {
+    height: 28px;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px 10px;
+  }
+
+  .nav-links a,
+  .welcome-text,
+  .auth-btn {
+    font-size: 0.74rem;
+  }
+
+  .hero {
+    min-height: 62svh;
+    padding: 44px 18px;
+    box-sizing: border-box;
+    background-position: center top;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 16vw, 3.8rem);
+    letter-spacing: 1px;
+  }
+
+  .subtitle {
+    font-size: 0.84rem;
+    line-height: 1.55;
+    max-width: 240px;
+  }
+
+  .hero-reserve-btn {
+    padding: 11px 18px;
+    font-size: 0.72rem;
+  }
+
+  .gallery {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 36px 14px 54px;
+  }
+
+  .item {
+    aspect-ratio: 0.96 / 1;
+  }
+
+  footer {
+    padding: 28px 18px 40px;
+    font-size: 0.68rem;
+    line-height: 1.8;
+  }
+
+  footer p {
+    margin: 0;
+  }
+
+  footer p + p {
+    margin-top: 6px;
+  }
+}
+
+@media (max-width: 430px) {
+  .landing-page {
+    padding: 0 0 10px;
+  }
+
+  .landing-hero {
+    width: calc(100% - 4px);
+    border-radius: 18px;
+  }
+
+  .landing-topbar {
+    grid-template-columns: 1fr 1fr;
+    display: grid;
+    align-items: start;
+    padding: 10px 11px;
+    gap: 8px;
+    font-size: 0.68rem;
+    line-height: 1.3;
+  }
+
+  .landing-image-wrap {
+    height: 172px;
+  }
+
+  .landing-card {
+    width: calc(100% - 8px);
+    margin-top: -22px;
+    padding: 52px 12px 18px;
+    border-radius: 22px 22px 18px 18px;
+  }
+
+  .landing-logo-badge {
+    top: -34px;
+    width: 72px;
+    height: 72px;
+    font-size: 1.35rem;
+  }
+
+  .landing-card h1 {
+    font-size: 1.45rem;
+    margin-bottom: 10px;
+  }
+
+  .landing-card p {
+    font-size: 0.78rem;
+    max-width: 250px;
+    margin-bottom: 14px;
+  }
+
+  .landing-primary,
+  .landing-secondary {
+    min-height: 56px;
+    padding: 13px 12px 13px 52px;
+    font-size: 0.82rem;
+  }
+
+  .landing-actions {
+    gap: 10px;
+  }
+
+  .landing-socials {
+    margin-bottom: 14px;
+  }
+
+  .landing-social-link {
+    width: 44px;
+    height: 44px;
+  }
+
+  .landing-social-link svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .landing-button-icon {
+    left: 10px;
+  }
+
+  .brand-badge {
+    width: 28px;
+    height: 28px;
+    font-size: 0.74rem;
+  }
+
+  .brand-badge.nearpet {
+    font-size: 0.56rem;
+  }
+
+  .landing-footer-copy p {
+    font-size: 0.62rem;
+    line-height: 1.45;
+  }
+
+  .main-header {
+    padding: 9px 10px;
+  }
+
+  .nav-links {
+    gap: 6px 7px;
+  }
+
+  .header-logo-img {
+    height: 24px;
+  }
+
+  .nav-links a,
+  .welcome-text,
+  .auth-btn {
+    font-size: 0.68rem;
+  }
+
+  .hero {
+    min-height: 50svh;
+    padding: 34px 14px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.15rem, 14vw, 3.2rem);
+  }
+
+  .subtitle {
+    font-size: 0.76rem;
+    max-width: 210px;
+  }
+
+  .hero-reserve-btn {
+    padding: 9px 14px;
+    font-size: 0.66rem;
+  }
+
+  .gallery {
+    padding: 22px 8px 36px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+/* --- Login Page Refined --- */
+
+.login-container {
+  height: calc(100vh - 70px); /* 헤더 제외 높이 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 배경에 은은한 빛 효과 추가 */
+.bg-blur-circle {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: rgba(245, 245, 220, 0.05); /* 크림색의 아주 연한 빛 */
+  filter: blur(100px);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.03); /* 아주 살짝 밝은 배경 */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  backdrop-filter: blur(20px); /* 글래스모피즘 효과 */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.login-logo {
+  height: 30px;
+  margin-bottom: 24px;
+}
+
+.login-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.login-header p {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 32px;
+}
+
+/* Input Styles */
+.input-group {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.75rem;
+  color: #666;
+  margin-bottom: 8px;
+  margin-left: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 14px 16px;
+  background: #141414;
+  border: 1px solid #222;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #F5F5DC; /* 크림색 포인트 */
+  background: #1a1a1a;
+}
+
+/* Button Styles */
+.primary-btn {
+  width: 100%;
+  padding: 14px;
+  background: #F5F5DC;
+  color: #000;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: transform 0.2s ease;
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  background: #ffffed;
+}
+
+.divider {
+  margin: 24px 0;
+  position: relative;
+  border-bottom: 1px solid #222;
+}
+
+.divider span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #0a0a0a; /* 배경색과 동일하게 */
+  padding: 0 12px;
+  color: #444;
+  font-size: 0.7rem;
+}
+
+.secondary-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: #888;
+  border: 1px solid #333;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.secondary-btn:hover {
+  color: white;
+  border-color: #555;
+}
+
+.login-footer {
+  margin-top: 32px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.text-btn {
+  background: none;
+  border: none;
+  color: #F5F5DC;
+  margin-left: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.admin-page {
+  min-height: calc(100vh - 71px);
+  padding: 60px 8%;
+  background: #0a0a0a;
+}
+
+.admin-header {
+  margin-bottom: 32px;
+}
+
+.admin-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.admin-header p {
+  color: #888;
+}
+
+.admin-layout {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 24px;
+}
+
+.admin-panel {
+  padding: 28px;
+  border: 1px solid #1d1d1d;
+  background: #111;
+}
+
+.admin-panel h2,
+.admin-form h3 {
+  margin-top: 0;
+  color: #f5f5dc;
+}
+
+.panel-spaced-title {
+  margin-top: 36px !important;
+}
+
+.admin-list,
+.admin-photo-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-card,
+.admin-photo-card {
+  padding: 18px;
+  border: 1px solid #222;
+  background: #0c0c0c;
+}
+
+.admin-photo-card {
+  position: relative;
+}
+
+.admin-card p,
+.admin-photo-card p {
+  color: #8a8a8a;
+}
+
+.admin-photo-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+
+.admin-photo-card.featured {
+  border-color: #f5f5dc;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.admin-actions button,
+.admin-form button,
+.admin-photo-card button {
+  padding: 10px 14px;
+  background: transparent;
+  border: 1px solid #555;
+  color: white;
+  cursor: pointer;
+}
+
+.admin-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.admin-form input,
+.admin-form textarea {
+  padding: 14px 16px;
+  background: #141414;
+  border: 1px solid #222;
+  color: white;
+}
+
+.admin-form input:focus,
+.admin-form textarea:focus {
+  outline: none;
+  border-color: #f5f5dc;
+}
+
+.danger {
+  border-color: #813030 !important;
+  color: #ff9b9b !important;
+}
+
+.admin-message {
+  margin-bottom: 20px;
+}
+
+.admin-message.success {
+  color: #f5f5dc;
+}
+
+.admin-message.error {
+  color: #ff9b9b;
+}
+
+.form-feedback {
+  margin-top: 14px;
+  font-size: 0.9rem;
+}
+
+.error-text {
+  color: #ff9b9b;
+}
+
+.login-hint {
+  margin-top: 18px;
+  color: #666;
+  font-size: 0.82rem;
+}
+
+.drop-zone {
+  padding: 24px;
+  border: 1px dashed #555;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+  color: #bbb;
+}
+
+.drop-zone.active {
+  border-color: #f5f5dc;
+  background: rgba(245, 245, 220, 0.04);
+}
+
+.drop-zone strong {
+  display: block;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.drop-zone p,
+.drop-zone span {
+  margin: 0;
+  color: #777;
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.featured-guide {
+  margin: 28px 0 18px;
+  color: #888;
+}
+
+.featured-guide strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #f5f5dc;
+}
+
+.featured-guide p {
+  margin: 0;
+}
+
+.pin-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid #444;
+  background: rgba(10, 10, 10, 0.85);
+  color: white;
+  cursor: pointer;
+}
+
+.pin-btn.active {
+  border-color: #f5f5dc;
+  background: rgba(245, 245, 220, 0.14);
+}
+
+.featured-badge {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #f5f5dc;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 980px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+}

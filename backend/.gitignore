@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+/.gradle
+/build
+/target
+/data/*
+!/data/.gitkeep
+*.log
+*.mv.db
+*.trace.db

@@ -1,0 +1,78 @@
+package com.nearpet.backend.photo.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "photos")
+public class Photo {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "image_url", nullable = false, length = 1000)
+    private String imageUrl;
+
+    @Column(nullable = false, length = 1000)
+    private String description;
+
+    @Column(name = "stored_file_name", length = 255)
+    private String storedFileName;
+
+    @Column(nullable = false)
+    private boolean featured;
+
+    @Column(name = "featured_order")
+    private Integer featuredOrder;
+
+    protected Photo() {
+    }
+
+    public Photo(
+            String imageUrl,
+            String description,
+            String storedFileName,
+            boolean featured,
+            Integer featuredOrder
+    ) {
+        this.imageUrl = imageUrl;
+        this.description = description;
+        this.storedFileName = storedFileName;
+        this.featured = featured;
+        this.featuredOrder = featuredOrder;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getStoredFileName() {
+        return storedFileName;
+    }
+
+    public boolean isFeatured() {
+        return featured;
+    }
+
+    public Integer getFeaturedOrder() {
+        return featuredOrder;
+    }
+
+    public void updateFeatured(boolean featured, Integer featuredOrder) {
+        this.featured = featured;
+        this.featuredOrder = featuredOrder;
+    }
+}
