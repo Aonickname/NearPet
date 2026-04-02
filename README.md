@@ -50,7 +50,7 @@ nearpet/
 요약:
 ```bash
 cd backend
-gradle bootRun
+./gradlew bootRun
 ```
 
 ### 2. Frontend

@@ -52,12 +52,12 @@ MAIL_FROM=
 `.env.example`을 복사해 `.env`를 만든 뒤 실행합니다.
 
 ```bash
-gradle bootRun
+./gradlew bootRun
 ```
 
 ## Build
 ```bash
-gradle clean bootJar
+./gradlew clean bootJar
 ```
 
 산출물:

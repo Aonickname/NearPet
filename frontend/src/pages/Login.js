@@ -74,7 +74,6 @@ function Login({ setUser }) {
           </button>
         </div>
 
-        <p className="login-hint">기본 관리자 계정: `admin` / `admin1234`</p>
       </div>
     </div>
   );

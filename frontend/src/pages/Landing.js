@@ -23,14 +23,14 @@ const reservationButtons = [
   },
   {
     key: 'kakaoReservation',
-    label: '카카오톡 예약하기',
+    label: '카카오톡 문의하기',
     href: LANDING_LINKS.kakaoReservation,
     external: true,
     icon: <span className="brand-badge kakao">T</span>,
   },
   {
     key: 'nearpetReservation',
-    label: '니어펫 예약하기',
+    label: '니어펫 사이트',
     href: LANDING_LINKS.nearpetReservation,
     external: false,
     icon: <span className="brand-badge nearpet">NP</span>,

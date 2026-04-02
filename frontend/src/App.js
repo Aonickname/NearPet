@@ -5,7 +5,6 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Admin from './pages/Admin';
-import Reservation from './pages/Reservation';
 import Header from './components/Header';
 import Gallery from './pages/Gallery';
 import './App.css';
@@ -23,7 +22,7 @@ function AppRoutes({ user, setUser }) {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/signup" element={<Signup setUser={setUser} />} />
-        <Route path="/reserve" element={<Reservation user={user} />} />
+        <Route path="/reserve" element={<Navigate to="/home" replace />} />
         <Route
           path="/admin"
           element={

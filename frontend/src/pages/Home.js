@@ -28,12 +28,6 @@ function Home() {
       <header className="hero">
         <h1>NearPet</h1>
         <p className="subtitle">반려동물과 당신의 소중한 시간을 담습니다.</p>
-        <button
-          className="hero-reserve-btn"
-          onClick={() => navigate('/reserve')}
-        >
-          RESERVE NOW
-        </button>
       </header>
 
       <section className="gallery">

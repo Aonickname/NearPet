@@ -12,8 +12,8 @@ beforeEach(() => {
   );
 });
 
-test('renders reserve now button', async () => {
+test('renders nearpet landing title', async () => {
   render(<App />);
-  const buttonElement = await screen.findByText(/reserve now/i);
-  expect(buttonElement).toBeInTheDocument();
+  const titleElement = await screen.findByText(/nearpet/i);
+  expect(titleElement).toBeInTheDocument();
 });

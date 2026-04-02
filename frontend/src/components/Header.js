@@ -24,7 +24,6 @@ function Header({ user, setUser }) {
 
       <div className="nav-links">
         <Link to="/gallery">Gallery</Link>
-        <Link to="/reserve">Reserve</Link>
         {user?.role === 'ADMIN' && (
           <Link to="/admin" className="admin-link">
             Admin
