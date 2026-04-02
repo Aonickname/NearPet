@@ -49,6 +49,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center center;
   filter: saturate(0.92) contrast(1.05);
 }
 
@@ -102,7 +103,9 @@ body {
 
 .landing-primary,
 .landing-secondary {
-  display: block;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
   width: 100%;
   position: relative;
   border-radius: 999px;
@@ -157,18 +160,24 @@ body {
 }
 
 .landing-button-icon {
-  position: absolute;
-  left: 22px;
-  top: 50%;
-  transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  grid-column: 1;
 }
 
 .landing-button-label {
   display: block;
+  grid-column: 2;
   text-align: center;
+}
+
+.landing-primary::after,
+.landing-secondary::after {
+  content: "";
+  width: 36px;
+  height: 36px;
+  grid-column: 3;
 }
 
 .brand-badge {
@@ -465,15 +474,9 @@ footer {
   .landing-primary,
   .landing-secondary {
     min-height: 62px;
-    padding: 15px 16px 15px 62px;
+    grid-template-columns: 40px 1fr 40px;
+    padding: 15px 18px;
     font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .landing-button-icon {
-    left: 12px;
   }
 
   .landing-button-label {
@@ -590,6 +593,10 @@ footer {
     height: 198px;
   }
 
+  .landing-image {
+    object-position: center 42%;
+  }
+
   .landing-card {
     width: calc(100% - 24px);
     margin-top: -28px;
@@ -618,7 +625,8 @@ footer {
   .landing-primary,
   .landing-secondary {
     min-height: 58px;
-    padding: 14px 14px 14px 52px;
+    grid-template-columns: 32px 1fr 32px;
+    padding: 14px 16px;
     font-size: 0.84rem;
   }
 
@@ -640,14 +648,16 @@ footer {
     height: 22px;
   }
 
-  .landing-button-icon {
-    left: 10px;
-  }
-
   .brand-badge {
     width: 28px;
     height: 28px;
     font-size: 0.74rem;
+  }
+
+  .landing-primary::after,
+  .landing-secondary::after {
+    width: 28px;
+    height: 28px;
   }
 
   .brand-badge.nearpet {
