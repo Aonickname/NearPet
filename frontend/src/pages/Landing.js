@@ -8,7 +8,7 @@ const LANDING_ASSETS = {
 const LANDING_LINKS = {
   instagram: 'https://instagram.com/near_pet_foto',
   naverReservation: 'https://example.com/naver-reservation',
-  kakaoReservation: 'https://example.com/kakao-reservation',
+  kakaoReservation: 'https://open.kakao.com/o/sTvPW8li',
   nearpetReservation: '/home',
   naverBlog: 'https://example.com/naver-blog',
 };
