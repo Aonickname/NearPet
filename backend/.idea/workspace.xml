@@ -5,6 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="83bc5a15-88b7-48ed-bf66-c80a96b4cdb9" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nearpet/backend/photo/controller/PhotoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nearpet/backend/photo/controller/PhotoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nearpet/backend/photo/dto/UpdatePhotoRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nearpet/backend/photo/model/Photo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nearpet/backend/photo/model/Photo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/nearpet/backend/photo/service/PhotoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nearpet/backend/photo/service/PhotoService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -124,7 +128,7 @@
       <workItem from="1774810636670" duration="58000" />
       <workItem from="1775035961649" duration="635000" />
       <workItem from="1775036885872" duration="9053000" />
-      <workItem from="1775247174344" duration="1508000" />
+      <workItem from="1775247174344" duration="3634000" />
     </task>
     <servers />
   </component>

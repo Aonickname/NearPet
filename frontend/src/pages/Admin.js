@@ -20,10 +20,16 @@ function Admin() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
+  const editFileInputRef = useRef(null);
   const pointerTargetRef = useRef(null);
 
   function showSuccess(messageText) {
     setMessage('');
+    alert(messageText);
+  }
+
+  function showError(messageText) {
+    setError('');
     alert(messageText);
   }
 
@@ -41,7 +47,7 @@ function Admin() {
         notificationEmail: settingsData?.notificationEmail || '',
       });
     } catch (loadError) {
-      setError(loadError.message);
+      showError(loadError.message);
     }
   }
 
@@ -116,7 +122,7 @@ function Admin() {
       : [...featuredPhotos.map((photo) => photo.id), photoId];
 
     if (!isFeatured && featuredPhotos.length >= 6) {
-      setError('대표 이미지는 최대 6장입니다.');
+      alert('대표 이미지는 최대 6장입니다.');
       return;
     }
 
@@ -124,7 +130,7 @@ function Admin() {
       await updateFeaturedPhotos(nextFeaturedIds);
       showSuccess(isFeatured ? '대표 이미지가 해제되었습니다.' : '대표 이미지로 고정되었습니다.');
     } catch (updateError) {
-      setError(updateError.message);
+      showError(updateError.message);
     }
   }
 
@@ -147,7 +153,7 @@ function Admin() {
       await updateFeaturedPhotos(orderedIds);
       showSuccess('대표 이미지 순서가 변경되었습니다.');
     } catch (updateError) {
-      setError(updateError.message);
+      showError(updateError.message);
     } finally {
       setDraggedFeaturedId(null);
     }
@@ -206,7 +212,7 @@ function Admin() {
       });
       showSuccess('알림 이메일이 저장되었습니다.');
     } catch (settingsError) {
-      setError(settingsError.message);
+      showError(settingsError.message);
     }
   }
 
@@ -238,7 +244,7 @@ function Admin() {
       showSuccess('예약 정보가 수정되었습니다.');
       await loadDashboard();
     } catch (updateError) {
-      setError(updateError.message);
+      showError(updateError.message);
     }
   }
 
@@ -256,7 +262,7 @@ function Admin() {
       }
       await loadDashboard();
     } catch (deleteError) {
-      setError(deleteError.message);
+      showError(deleteError.message);
     }
   }
 
@@ -292,7 +298,7 @@ function Admin() {
       showSuccess('사진이 추가되었습니다.');
       await loadDashboard();
     } catch (photoError) {
-      setError(photoError.message);
+      showError(photoError.message);
     }
   }
 
@@ -307,18 +313,107 @@ function Admin() {
       showSuccess('사진이 삭제되었습니다.');
       await loadDashboard();
     } catch (deleteError) {
-      setError(deleteError.message);
+      showError(deleteError.message);
     }
   }
 
   function startPhotoEdit(photo) {
+    const imageUrls = photo.imageUrls || [photo.imageUrl];
     setPhotoEditForm({
       id: photo.id,
       description: photo.description || '',
       coverImageUrl: photo.imageUrl,
-      imageUrls: photo.imageUrls || [photo.imageUrl],
+      images: imageUrls.map((imageUrl, index) => ({
+        key: imageUrl,
+        url: imageUrl,
+        isNew: false,
+      })),
     });
     setError('');
+  }
+
+  function closePhotoEdit() {
+    if (photoEditForm?.images) {
+      photoEditForm.images
+        .filter((image) => image.isNew && image.previewUrl)
+        .forEach((image) => URL.revokeObjectURL(image.previewUrl));
+    }
+    setPhotoEditForm(null);
+  }
+
+  function handlePhotoEditImageAdd(fileList) {
+    const nextFiles = Array.from(fileList || []).filter(Boolean);
+    if (!nextFiles.length) {
+      return;
+    }
+
+    setPhotoEditForm((current) => {
+      if (!current) {
+        return current;
+      }
+
+      const nextImages = nextFiles.map((file) => {
+        const previewUrl = URL.createObjectURL(file);
+        return {
+          key: `new-${crypto.randomUUID()}`,
+          url: previewUrl,
+          previewUrl,
+          file,
+          isNew: true,
+        };
+      });
+
+      return {
+        ...current,
+        images: [...current.images, ...nextImages],
+      };
+    });
+  }
+
+  function removePhotoEditImage(targetKey) {
+    setPhotoEditForm((current) => {
+      if (!current) {
+        return current;
+      }
+
+      const targetImage = current.images.find((image) => image.key === targetKey);
+      if (targetImage?.isNew && targetImage.previewUrl) {
+        URL.revokeObjectURL(targetImage.previewUrl);
+      }
+
+      const nextImages = current.images.filter((image) => image.key !== targetKey);
+      const nextCoverImageUrl = current.coverImageUrl === targetImage?.url
+        ? (nextImages[0]?.url || '')
+        : current.coverImageUrl;
+
+      return {
+        ...current,
+        images: nextImages,
+        coverImageUrl: nextCoverImageUrl,
+      };
+    });
+  }
+
+  function movePhotoEditImage(targetKey, direction) {
+    setPhotoEditForm((current) => {
+      if (!current) {
+        return current;
+      }
+
+      const nextImages = [...current.images];
+      const currentIndex = nextImages.findIndex((image) => image.key === targetKey);
+      const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+
+      if (currentIndex < 0 || targetIndex < 0 || targetIndex >= nextImages.length) {
+        return current;
+      }
+
+      [nextImages[currentIndex], nextImages[targetIndex]] = [nextImages[targetIndex], nextImages[currentIndex]];
+      return {
+        ...current,
+        images: nextImages,
+      };
+    });
   }
 
   async function handlePhotoUpdate(event) {
@@ -330,18 +425,27 @@ function Admin() {
     setError('');
 
     try {
+      const formData = new FormData();
+      const newImages = photoEditForm.images.filter((image) => image.isNew);
+
+      formData.append('description', photoEditForm.description);
+      const coverImage = photoEditForm.images.find((image) => image.url === photoEditForm.coverImageUrl);
+      formData.append('coverImageKey', coverImage?.key || '');
+      formData.append('imageOrder', JSON.stringify(photoEditForm.images.map((image) => image.key)));
+      newImages.forEach((image) => {
+        formData.append('newImageKeys', image.key);
+        formData.append('files', image.file);
+      });
+
       await request(`/photos/${photoEditForm.id}`, {
         method: 'PUT',
-        body: JSON.stringify({
-          description: photoEditForm.description,
-          coverImageUrl: photoEditForm.coverImageUrl,
-        }),
+        body: formData,
       });
-      setPhotoEditForm(null);
+      closePhotoEdit();
       showSuccess('사진 게시글이 수정되었습니다.');
       await loadDashboard();
     } catch (updateError) {
-      setError(updateError.message);
+      showError(updateError.message);
     }
   }
 
@@ -351,8 +455,6 @@ function Admin() {
         <h1>Admin Dashboard</h1>
         <p>예약 관리와 갤러리 사진 관리를 한 곳에서 진행할 수 있습니다.</p>
       </div>
-
-      {error && <p className="admin-message error">{error}</p>}
 
       <div className="admin-layout">
         <section className="admin-panel">
@@ -559,48 +661,121 @@ function Admin() {
             ))}
           </div>
 
-          {photoEditForm && (
-            <form className="admin-form photo-edit-form" onSubmit={handlePhotoUpdate}>
-              <h3>사진 게시글 수정</h3>
-              <textarea
-                name="description"
-                value={photoEditForm.description}
-                onChange={handlePhotoEditFormChange}
-                rows="3"
-                placeholder="사진 설명"
-              />
+        </section>
+      </div>
 
-              <div className="cover-picker">
-                <strong>게시글 대표 이미지</strong>
-                <div className="cover-picker-grid">
-                  {photoEditForm.imageUrls.map((imageUrl) => (
-                    <label
-                      key={`${photoEditForm.id}-${imageUrl}`}
-                      className={`cover-picker-item ${photoEditForm.coverImageUrl === imageUrl ? 'selected' : ''}`}
-                    >
+      {photoEditForm && (
+        <div className="admin-modal-backdrop" onClick={closePhotoEdit} role="presentation">
+          <form
+            className="admin-modal admin-form"
+            onClick={(event) => event.stopPropagation()}
+            onSubmit={handlePhotoUpdate}
+          >
+            <div className="admin-modal-header">
+              <h3>사진 게시글 수정</h3>
+              <button type="button" className="admin-modal-close" onClick={closePhotoEdit}>
+                ×
+              </button>
+            </div>
+
+            <textarea
+              name="description"
+              value={photoEditForm.description}
+              onChange={handlePhotoEditFormChange}
+              rows="3"
+              placeholder="사진 설명"
+            />
+
+            <div className="cover-picker">
+              <strong>게시글 이미지 편집</strong>
+              <div className="cover-picker-grid">
+                {photoEditForm.images.map((image, index) => (
+                  <div
+                    key={image.key}
+                    className={`cover-picker-item ${photoEditForm.coverImageUrl === image.url ? 'selected' : ''}`}
+                  >
+                    <div className="cover-picker-image-frame">
+                      <img src={image.url} alt="게시글 이미지 편집 후보" />
+                    </div>
+                    <div className="cover-picker-toolbar">
                       <input
                         type="radio"
                         name="coverImageUrl"
-                        value={imageUrl}
-                        checked={photoEditForm.coverImageUrl === imageUrl}
+                        value={image.url}
+                        checked={photoEditForm.coverImageUrl === image.url}
                         onChange={handlePhotoEditFormChange}
+                        className="cover-picker-radio-input"
                       />
-                      <img src={imageUrl} alt="대표 이미지 선택 후보" />
-                    </label>
-                  ))}
-                </div>
+                      <div className="cover-picker-toolbar-top">
+                        {photoEditForm.coverImageUrl === image.url && (
+                          <span className="cover-picker-selected-badge">대표</span>
+                        )}
+                        <button
+                          type="button"
+                          className="cover-picker-cover-button"
+                          onClick={() => setPhotoEditForm((current) => ({
+                            ...current,
+                            coverImageUrl: image.url,
+                          }))}
+                          disabled={photoEditForm.coverImageUrl === image.url}
+                        >
+                          {photoEditForm.coverImageUrl === image.url ? '대표 이미지' : '대표로 설정'}
+                        </button>
+                      </div>
+                      <div className="cover-picker-order-actions">
+                        <button type="button" onClick={() => movePhotoEditImage(image.key, 'up')} disabled={index === 0}>
+                          ↑
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => movePhotoEditImage(image.key, 'down')}
+                          disabled={index === photoEditForm.images.length - 1}
+                        >
+                          ↓
+                        </button>
+                        <button
+                          type="button"
+                          className="danger"
+                          onClick={() => removePhotoEditImage(image.key)}
+                          disabled={photoEditForm.images.length === 1}
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
+            </div>
 
-              <div className="admin-actions">
-                <button type="submit">저장</button>
-                <button type="button" onClick={() => setPhotoEditForm(null)}>
-                  취소
-                </button>
-              </div>
-            </form>
-          )}
-        </section>
-      </div>
+            <div
+              className="drop-zone compact"
+              onClick={() => editFileInputRef.current?.click()}
+            >
+              <input
+                ref={editFileInputRef}
+                type="file"
+                multiple
+                accept=".jpg,.jpeg,.png,.webp"
+                className="hidden-file-input"
+                onChange={(event) => {
+                  handlePhotoEditImageAdd(event.target.files);
+                  event.target.value = '';
+                }}
+              />
+              <strong>새 이미지 추가</strong>
+              <p>여러 장을 추가한 뒤 대표 이미지와 순서를 다시 정할 수 있습니다.</p>
+            </div>
+
+            <div className="admin-actions">
+              <button type="submit">저장</button>
+              <button type="button" onClick={closePhotoEdit}>
+                취소
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

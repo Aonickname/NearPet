@@ -6,7 +6,6 @@ import com.nearpet.backend.global.ForbiddenOperationException;
 import com.nearpet.backend.global.ResourceNotFoundException;
 import com.nearpet.backend.photo.dto.CreatePhotoRequest;
 import com.nearpet.backend.photo.dto.PhotoResponse;
-import com.nearpet.backend.photo.dto.UpdatePhotoRequest;
 import com.nearpet.backend.photo.model.Photo;
 import com.nearpet.backend.photo.repository.PhotoRepository;
 import jakarta.annotation.PostConstruct;
@@ -22,8 +21,10 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -170,34 +171,83 @@ public class PhotoService {
         return getPhotos();
     }
 
-    public PhotoResponse updatePhoto(Long id, UpdatePhotoRequest request, String requesterRole) {
+    public PhotoResponse updatePhoto(
+            Long id,
+            String description,
+            String coverImageKey,
+            String imageOrderJson,
+            List<String> newImageKeys,
+            List<MultipartFile> files,
+            String requesterRole
+    ) {
         ensureAdmin(requesterRole);
 
         Photo target = photoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("수정할 사진 게시글을 찾을 수 없습니다."));
 
-        List<String> imageUrls = resolveImageUrls(target);
-        if (imageUrls.isEmpty()) {
+        List<String> currentImageUrls = resolveImageUrls(target);
+        List<String> currentStoredFileNames = resolveStoredFileNames(target);
+        if (currentImageUrls.isEmpty()) {
             throw new IllegalStateException("사진 게시글에 표시 가능한 이미지가 없습니다.");
         }
 
-        String coverImageUrl = request.coverImageUrl().trim();
-        if (!imageUrls.contains(coverImageUrl)) {
+        List<String> imageOrder = readJsonList(imageOrderJson);
+        if (imageOrder.isEmpty()) {
+            throw new IllegalArgumentException("최소 한 장 이상의 사진이 필요합니다.");
+        }
+
+        List<String> safeNewImageKeys = newImageKeys == null ? List.of() : newImageKeys;
+        List<MultipartFile> safeFiles = files == null ? List.of() : files;
+        if (safeNewImageKeys.size() != safeFiles.size()) {
+            throw new IllegalArgumentException("새 이미지 정보가 올바르지 않습니다.");
+        }
+
+        Map<String, String> existingUrlToStored = new HashMap<>();
+        for (int index = 0; index < currentImageUrls.size(); index++) {
+            String imageUrl = currentImageUrls.get(index);
+            String storedFileName = index < currentStoredFileNames.size() ? currentStoredFileNames.get(index) : null;
+            existingUrlToStored.put(imageUrl, storedFileName);
+        }
+
+        Map<String, UploadedImage> uploadedImages = storeUploadedImages(safeNewImageKeys, safeFiles);
+        List<String> nextImageUrls = new ArrayList<>();
+        List<String> nextStoredFileNames = new ArrayList<>();
+
+        for (String imageKey : imageOrder) {
+            if (uploadedImages.containsKey(imageKey)) {
+                UploadedImage uploadedImage = uploadedImages.get(imageKey);
+                nextImageUrls.add(uploadedImage.imageUrl());
+                nextStoredFileNames.add(uploadedImage.storedFileName());
+                continue;
+            }
+
+            if (!existingUrlToStored.containsKey(imageKey)) {
+                throw new IllegalArgumentException("선택한 이미지 순서 정보가 올바르지 않습니다.");
+            }
+
+            nextImageUrls.add(imageKey);
+            nextStoredFileNames.add(existingUrlToStored.get(imageKey));
+        }
+
+        if (!imageOrder.contains(coverImageKey)) {
             throw new IllegalArgumentException("선택한 대표 이미지를 게시글에서 찾을 수 없습니다.");
         }
 
-        List<String> storedFileNames = resolveStoredFileNames(target);
-        String nextStoredFileName = null;
-        int coverIndex = imageUrls.indexOf(coverImageUrl);
-        if (coverIndex >= 0 && coverIndex < storedFileNames.size()) {
-            nextStoredFileName = storedFileNames.get(coverIndex);
-        }
+        int coverIndex = imageOrder.indexOf(coverImageKey);
+        String coverImageUrl = nextImageUrls.get(coverIndex);
+        String nextStoredFileName = nextStoredFileNames.get(coverIndex);
+
+        currentImageUrls.stream()
+                .filter(imageUrl -> !nextImageUrls.contains(imageUrl))
+                .map(existingUrlToStored::get)
+                .forEach(this::deleteStoredFile);
 
         target.updatePostContent(
-                request.description() == null ? "" : request.description().trim(),
+                description == null ? "" : description.trim(),
                 coverImageUrl,
                 nextStoredFileName
         );
+        updatePhotoCollections(target, nextImageUrls, nextStoredFileNames);
 
         return toResponse(photoRepository.save(target));
     }
@@ -361,6 +411,45 @@ public class PhotoService {
         }
     }
 
+    private Map<String, UploadedImage> storeUploadedImages(List<String> imageKeys, List<MultipartFile> files) {
+        Map<String, UploadedImage> uploadedImages = new HashMap<>();
+
+        for (int index = 0; index < files.size(); index++) {
+            MultipartFile file = files.get(index);
+            if (file == null || file.isEmpty()) {
+                continue;
+            }
+
+            String extension = extractExtension(file.getOriginalFilename());
+            if (!List.of("jpg", "jpeg", "png", "webp").contains(extension.toLowerCase())) {
+                throw new IllegalArgumentException("jpg, jpeg, png, webp 파일만 업로드할 수 있습니다.");
+            }
+
+            String storedFileName = UUID.randomUUID() + "." + extension;
+            Path targetPath = uploadPath.resolve(storedFileName);
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException exception) {
+                throw new IllegalStateException("사진 파일을 저장하지 못했습니다.", exception);
+            }
+
+            uploadedImages.put(imageKeys.get(index), new UploadedImage(
+                    publicBaseUrl + "/uploads/" + storedFileName,
+                    storedFileName
+            ));
+        }
+
+        return uploadedImages;
+    }
+
+    private void updatePhotoCollections(Photo photo, List<String> imageUrls, List<String> storedFileNames) {
+        photo.updateImageCollections(
+                writeJson(imageUrls),
+                storedFileNames.isEmpty() ? null : writeJson(storedFileNames)
+        );
+    }
+
     private Photo createSeedPhoto(String imageUrl, String description, boolean featured, Integer featuredOrder) {
         return new Photo(
                 imageUrl,
@@ -380,6 +469,12 @@ public class PhotoService {
             String storedFileName,
             boolean featured,
             Integer featuredOrder
+    ) {
+    }
+
+    private record UploadedImage(
+            String imageUrl,
+            String storedFileName
     ) {
     }
 }

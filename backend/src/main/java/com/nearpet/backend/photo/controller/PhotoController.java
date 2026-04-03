@@ -2,7 +2,6 @@ package com.nearpet.backend.photo.controller;
 
 import com.nearpet.backend.photo.dto.CreatePhotoRequest;
 import com.nearpet.backend.photo.dto.PhotoResponse;
-import com.nearpet.backend.photo.dto.UpdatePhotoRequest;
 import com.nearpet.backend.photo.dto.UpdateFeaturedPhotosRequest;
 import com.nearpet.backend.photo.service.PhotoService;
 import jakarta.validation.Valid;
@@ -68,13 +67,17 @@ public class PhotoController {
         return photoService.updateFeaturedPhotos(request.photoIds(), requesterRole);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public PhotoResponse updatePhoto(
             @PathVariable Long id,
-            @Valid @RequestBody UpdatePhotoRequest request,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam("coverImageKey") String coverImageKey,
+            @RequestParam("imageOrder") String imageOrderJson,
+            @RequestParam(value = "newImageKeys", required = false) List<String> newImageKeys,
+            @RequestParam(value = "files", required = false) List<MultipartFile> files,
             @RequestHeader("X-User-Role") String requesterRole
     ) {
-        return photoService.updatePhoto(id, request, requesterRole);
+        return photoService.updatePhoto(id, description, coverImageKey, imageOrderJson, newImageKeys, files, requesterRole);
     }
 
     @DeleteMapping("/{id}")

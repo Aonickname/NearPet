@@ -95,6 +95,11 @@ public class Photo {
         this.storedFileName = storedFileName;
     }
 
+    public void updateImageCollections(String imageUrlsJson, String storedFileNamesJson) {
+        this.imageUrlsJson = imageUrlsJson;
+        this.storedFileNamesJson = storedFileNamesJson;
+    }
+
     public void updateFeatured(boolean featured, Integer featuredOrder) {
         this.featured = featured;
         this.featuredOrder = featuredOrder;
