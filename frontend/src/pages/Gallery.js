@@ -18,29 +18,15 @@ function Gallery() {
   }, []);
 
   return (
-    <div
-      className="gallery-page"
-      style={{ padding: '100px 8%', backgroundColor: '#0a0a0a' }}
-    >
-      <h1
-        style={{ color: 'white', textAlign: 'center', marginBottom: '50px' }}
-      >
-        NearPet Full Gallery
-      </h1>
-      <div
-        className="gallery"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-          gap: '15px',
-        }}
-      >
+    <div className="gallery-page nearpet-gallery-page">
+      <h1 className="nearpet-gallery-title">NearPet Full Gallery</h1>
+      <div className="gallery nearpet-gallery-grid">
         {photos.map((photo) => (
           <div className="item" key={photo.id}>
             <img
               src={photo.imageUrl}
               alt={photo.description || '강아지 사진'}
-              style={{ width: '100%', aspectRatio: '1 / 1', objectFit: 'cover' }}
+              className="nearpet-gallery-image"
             />
           </div>
         ))}

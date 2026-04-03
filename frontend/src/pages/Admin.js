@@ -20,6 +20,11 @@ function Admin() {
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
 
+  function showSuccess(messageText) {
+    setMessage('');
+    alert(messageText);
+  }
+
   async function loadDashboard() {
     try {
       const [reservationData, photoData, settingsData] = await Promise.all([
@@ -106,7 +111,7 @@ function Admin() {
 
     try {
       await updateFeaturedPhotos(nextFeaturedIds);
-      setMessage(isFeatured ? '대표 이미지가 해제되었습니다.' : '대표 이미지로 고정되었습니다.');
+      showSuccess(isFeatured ? '대표 이미지가 해제되었습니다.' : '대표 이미지로 고정되었습니다.');
     } catch (updateError) {
       setError(updateError.message);
     }
@@ -129,7 +134,7 @@ function Admin() {
 
     try {
       await updateFeaturedPhotos(orderedIds);
-      setMessage('대표 이미지 순서가 변경되었습니다.');
+      showSuccess('대표 이미지 순서가 변경되었습니다.');
     } catch (updateError) {
       setError(updateError.message);
     } finally {
@@ -150,7 +155,7 @@ function Admin() {
       setSettingsForm({
         notificationEmail: updatedSettings.notificationEmail || '',
       });
-      setMessage('알림 이메일이 저장되었습니다.');
+      showSuccess('알림 이메일이 저장되었습니다.');
     } catch (settingsError) {
       setError(settingsError.message);
     }
@@ -181,7 +186,7 @@ function Admin() {
       });
 
       setReservationForm(null);
-      setMessage('예약 정보가 수정되었습니다.');
+      showSuccess('예약 정보가 수정되었습니다.');
       await loadDashboard();
     } catch (updateError) {
       setError(updateError.message);
@@ -196,7 +201,7 @@ function Admin() {
       await request(`/reservations/${id}`, {
         method: 'DELETE',
       });
-      setMessage('예약이 삭제되었습니다.');
+      showSuccess('예약이 삭제되었습니다.');
       if (reservationForm?.id === id) {
         setReservationForm(null);
       }
@@ -233,7 +238,7 @@ function Admin() {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
-      setMessage('사진이 추가되었습니다.');
+      showSuccess('사진이 추가되었습니다.');
       await loadDashboard();
     } catch (photoError) {
       setError(photoError.message);
@@ -248,7 +253,7 @@ function Admin() {
       await request(`/photos/${id}`, {
         method: 'DELETE',
       });
-      setMessage('사진이 삭제되었습니다.');
+      showSuccess('사진이 삭제되었습니다.');
       await loadDashboard();
     } catch (deleteError) {
       setError(deleteError.message);
@@ -262,7 +267,6 @@ function Admin() {
         <p>예약 관리와 갤러리 사진 관리를 한 곳에서 진행할 수 있습니다.</p>
       </div>
 
-      {message && <p className="admin-message success">{message}</p>}
       {error && <p className="admin-message error">{error}</p>}
 
       <div className="admin-layout">
