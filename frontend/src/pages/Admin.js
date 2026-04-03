@@ -19,6 +19,7 @@ function Admin() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
+  const pointerTargetRef = useRef(null);
 
   function showSuccess(messageText) {
     setMessage('');
@@ -140,6 +141,44 @@ function Admin() {
     } finally {
       setDraggedFeaturedId(null);
     }
+  }
+
+  function beginFeaturedHandleDrag(photoId, event) {
+    if (!featuredPhotos.some((photo) => photo.id === photoId)) {
+      return;
+    }
+
+    setDraggedFeaturedId(photoId);
+    pointerTargetRef.current = photoId;
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  }
+
+  function trackFeaturedHandleDrag(event) {
+    if (!draggedFeaturedId) {
+      return;
+    }
+
+    const hoveredElement = document.elementFromPoint(event.clientX, event.clientY);
+    const targetCard = hoveredElement?.closest?.('[data-featured-id]');
+    const nextTarget = targetCard ? Number(targetCard.getAttribute('data-featured-id')) : null;
+    pointerTargetRef.current = Number.isNaN(nextTarget) ? null : nextTarget;
+  }
+
+  async function endFeaturedHandleDrag(event) {
+    if (!draggedFeaturedId) {
+      return;
+    }
+
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
+    const targetId = pointerTargetRef.current;
+    pointerTargetRef.current = null;
+
+    if (!targetId || targetId === draggedFeaturedId) {
+      setDraggedFeaturedId(null);
+      return;
+    }
+
+    await reorderFeatured(targetId);
   }
 
   async function handleSettingsSubmit(event) {
@@ -420,13 +459,27 @@ function Admin() {
           <div className="admin-photo-grid">
             {photos.map((photo) => (
               <div
-                className={`admin-photo-card ${photo.featured ? 'featured' : ''}`}
+                className={`admin-photo-card ${photo.featured ? 'featured' : ''} ${draggedFeaturedId === photo.id ? 'sorting' : ''}`}
                 key={photo.id}
-                draggable={photo.featured}
-                onDragStart={() => setDraggedFeaturedId(photo.id)}
-                onDragOver={(event) => photo.featured && event.preventDefault()}
-                onDrop={() => photo.featured && reorderFeatured(photo.id)}
+                data-featured-id={photo.featured ? photo.id : undefined}
               >
+                {photo.featured && (
+                  <button
+                    type="button"
+                    className="drag-handle"
+                    title="대표 이미지 순서 변경"
+                    aria-label="대표 이미지 순서 변경"
+                    onPointerDown={(event) => beginFeaturedHandleDrag(photo.id, event)}
+                    onPointerMove={trackFeaturedHandleDrag}
+                    onPointerUp={endFeaturedHandleDrag}
+                    onPointerCancel={() => {
+                      pointerTargetRef.current = null;
+                      setDraggedFeaturedId(null);
+                    }}
+                  >
+                    =
+                  </button>
+                )}
                 <button
                   type="button"
                   className={`pin-btn ${photo.featured ? 'active' : ''}`}
