@@ -298,7 +298,10 @@ public class PhotoService {
 
     private PhotoResponse toResponse(Photo photo) {
         List<String> imageUrls = resolveImageUrls(photo);
-        String imageUrl = imageUrls.isEmpty() ? photo.getImageUrl() : imageUrls.get(0);
+        String imageUrl = photo.getImageUrl();
+        if (imageUrl == null || imageUrl.isBlank()) {
+            imageUrl = imageUrls.isEmpty() ? "" : imageUrls.get(0);
+        }
 
         return new PhotoResponse(
                 photo.getId(),
