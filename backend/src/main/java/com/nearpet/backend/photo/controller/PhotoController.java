@@ -47,11 +47,16 @@ public class PhotoController {
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public PhotoResponse uploadPhoto(
-            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "files", required = false) List<MultipartFile> files,
+            @RequestParam(value = "file", required = false) MultipartFile file,
             @RequestParam(value = "description", required = false) String description,
             @RequestHeader("X-User-Role") String requesterRole
     ) {
-        return photoService.uploadPhoto(file, description, requesterRole);
+        List<MultipartFile> uploadTargets = files;
+        if ((uploadTargets == null || uploadTargets.isEmpty()) && file != null) {
+            uploadTargets = List.of(file);
+        }
+        return photoService.uploadPhotos(uploadTargets, description, requesterRole);
     }
 
     @PutMapping("/featured")

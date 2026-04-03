@@ -13,7 +13,7 @@ function Admin() {
   const [settingsForm, setSettingsForm] = useState({
     notificationEmail: '',
   });
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const [dragActive, setDragActive] = useState(false);
   const [draggedFeaturedId, setDraggedFeaturedId] = useState(null);
   const [message, setMessage] = useState('');
@@ -76,12 +76,13 @@ function Admin() {
     }));
   }
 
-  function handleFileSelect(file) {
-    if (!file) {
+  function handleFileSelect(fileList) {
+    const nextFiles = Array.from(fileList || []).filter(Boolean);
+    if (!nextFiles.length) {
       return;
     }
 
-    setSelectedFile(file);
+    setSelectedFiles(nextFiles);
     setPhotoForm((current) => ({
       ...current,
       imageUrl: '',
@@ -256,9 +257,11 @@ function Admin() {
     setError('');
 
     try {
-      if (selectedFile) {
+      if (selectedFiles.length > 0) {
         const formData = new FormData();
-        formData.append('file', selectedFile);
+        selectedFiles.forEach((file) => {
+          formData.append('files', file);
+        });
         formData.append('description', photoForm.description);
 
         await request('/photos/upload', {
@@ -273,7 +276,7 @@ function Admin() {
       }
 
       setPhotoForm({ imageUrl: '', description: '' });
-      setSelectedFile(null);
+      setSelectedFiles([]);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -418,20 +421,23 @@ function Admin() {
               onDrop={(event) => {
                 event.preventDefault();
                 setDragActive(false);
-                handleFileSelect(event.dataTransfer.files?.[0]);
+                handleFileSelect(event.dataTransfer.files);
               }}
               onClick={() => fileInputRef.current?.click()}
             >
               <input
                 ref={fileInputRef}
                 type="file"
+                multiple
                 accept=".jpg,.jpeg,.png,.webp"
                 className="hidden-file-input"
-                onChange={(event) => handleFileSelect(event.target.files?.[0])}
+                onChange={(event) => handleFileSelect(event.target.files)}
               />
-              <strong>사진 파일 드래그 또는 클릭</strong>
+              <strong>사진 파일 여러 장 드래그 또는 클릭</strong>
               <p>jpg, png, webp 파일 업로드 가능</p>
-              {selectedFile && <span>{selectedFile.name}</span>}
+              {selectedFiles.length > 0 && (
+                <span>{selectedFiles.length}개 파일 선택됨</span>
+              )}
             </div>
 
             <div className="divider"><span>또는</span></div>
@@ -440,7 +446,7 @@ function Admin() {
               value={photoForm.imageUrl}
               onChange={handlePhotoFormChange}
               placeholder="사진 URL"
-              disabled={Boolean(selectedFile)}
+              disabled={selectedFiles.length > 0}
             />
             <input
               name="description"
@@ -489,6 +495,7 @@ function Admin() {
                   {photo.featured ? '📌' : '📍'}
                 </button>
                 <img src={photo.imageUrl} alt={photo.description || '반려동물 사진'} />
+                {photo.hasMultipleImages && <span className="multi-image-badge">◫</span>}
                 <p>{photo.description || '설명 없음'}</p>
                 {photo.featured && (
                   <span className="featured-badge">Home #{(photo.featuredOrder ?? 0) + 1}</span>

@@ -24,6 +24,12 @@ public class Photo {
     @Column(name = "stored_file_name", length = 255)
     private String storedFileName;
 
+    @Column(name = "image_urls", columnDefinition = "TEXT")
+    private String imageUrlsJson;
+
+    @Column(name = "stored_file_names", columnDefinition = "TEXT")
+    private String storedFileNamesJson;
+
     @Column(nullable = false)
     private boolean featured;
 
@@ -37,12 +43,16 @@ public class Photo {
             String imageUrl,
             String description,
             String storedFileName,
+            String imageUrlsJson,
+            String storedFileNamesJson,
             boolean featured,
             Integer featuredOrder
     ) {
         this.imageUrl = imageUrl;
         this.description = description;
         this.storedFileName = storedFileName;
+        this.imageUrlsJson = imageUrlsJson;
+        this.storedFileNamesJson = storedFileNamesJson;
         this.featured = featured;
         this.featuredOrder = featuredOrder;
     }
@@ -61,6 +71,14 @@ public class Photo {
 
     public String getStoredFileName() {
         return storedFileName;
+    }
+
+    public String getImageUrlsJson() {
+        return imageUrlsJson;
+    }
+
+    public String getStoredFileNamesJson() {
+        return storedFileNamesJson;
     }
 
     public boolean isFeatured() {

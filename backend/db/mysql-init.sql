@@ -19,6 +19,8 @@ CREATE TABLE IF NOT EXISTS photos (
     image_url VARCHAR(1000) NOT NULL,
     description VARCHAR(1000) NOT NULL,
     stored_file_name VARCHAR(255) NULL,
+    image_urls TEXT NULL,
+    stored_file_names TEXT NULL,
     featured BIT(1) NOT NULL DEFAULT b'0',
     featured_order INT NULL,
     PRIMARY KEY (id)

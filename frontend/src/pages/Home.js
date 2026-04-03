@@ -33,11 +33,12 @@ function Home() {
       <section className="gallery">
         {photos.map((photo) => (
           <div
-            className="item"
+            className="item nearpet-post-card"
             key={photo.id}
             onClick={() => navigate('/gallery')}
           >
             <img src={photo.imageUrl} alt={photo.description || '강아지 스냅'} />
+            {photo.hasMultipleImages && <span className="multi-image-indicator">◫</span>}
           </div>
         ))}
       </section>
