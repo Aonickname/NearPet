@@ -38,7 +38,6 @@ function Home() {
             onClick={() => navigate('/gallery')}
           >
             <img src={photo.imageUrl} alt={photo.description || '강아지 스냅'} />
-            {photo.hasMultipleImages && <span className="multi-image-indicator">◫</span>}
           </div>
         ))}
       </section>
