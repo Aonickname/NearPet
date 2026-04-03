@@ -103,6 +103,14 @@ body {
   font-weight: 800;
 }
 
+.landing-brand-title {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
 .landing-card p {
   margin: 0 auto 28px;
   max-width: 460px;
@@ -710,6 +718,10 @@ footer {
     line-height: 1.08;
   }
 
+  .landing-brand-title {
+    letter-spacing: 0.01em;
+  }
+
   .landing-card p {
     margin-bottom: 18px;
     font-size: 0.88rem;
@@ -910,6 +922,10 @@ footer {
   .landing-card h1 {
     font-size: 1.58rem;
     margin-bottom: 10px;
+  }
+
+  .landing-brand-title {
+    letter-spacing: 0;
   }
 
   .landing-card p {
@@ -1279,6 +1295,12 @@ footer {
   margin-top: 24px;
 }
 
+.photo-edit-form {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid #222;
+}
+
 .admin-form input,
 .admin-form textarea {
   padding: 14px 16px;
@@ -1368,6 +1390,48 @@ footer {
 
 .featured-guide p {
   margin: 0;
+}
+
+.cover-picker {
+  display: grid;
+  gap: 12px;
+}
+
+.cover-picker strong {
+  color: #f5f5dc;
+}
+
+.cover-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 12px;
+}
+
+.cover-picker-item {
+  position: relative;
+  display: block;
+  border: 1px solid #333;
+  overflow: hidden;
+  cursor: pointer;
+  background: #0c0c0c;
+}
+
+.cover-picker-item.selected {
+  border-color: #f5f5dc;
+  box-shadow: 0 0 0 2px rgba(245, 245, 220, 0.14);
+}
+
+.cover-picker-item input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cover-picker-item img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
 }
 
 .pin-btn {

@@ -2,6 +2,7 @@ package com.nearpet.backend.photo.controller;
 
 import com.nearpet.backend.photo.dto.CreatePhotoRequest;
 import com.nearpet.backend.photo.dto.PhotoResponse;
+import com.nearpet.backend.photo.dto.UpdatePhotoRequest;
 import com.nearpet.backend.photo.dto.UpdateFeaturedPhotosRequest;
 import com.nearpet.backend.photo.service.PhotoService;
 import jakarta.validation.Valid;
@@ -65,6 +66,15 @@ public class PhotoController {
             @RequestHeader("X-User-Role") String requesterRole
     ) {
         return photoService.updateFeaturedPhotos(request.photoIds(), requesterRole);
+    }
+
+    @PutMapping("/{id}")
+    public PhotoResponse updatePhoto(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdatePhotoRequest request,
+            @RequestHeader("X-User-Role") String requesterRole
+    ) {
+        return photoService.updatePhoto(id, request, requesterRole);
     }
 
     @DeleteMapping("/{id}")

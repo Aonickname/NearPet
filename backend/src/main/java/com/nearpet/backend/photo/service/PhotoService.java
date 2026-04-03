@@ -6,6 +6,7 @@ import com.nearpet.backend.global.ForbiddenOperationException;
 import com.nearpet.backend.global.ResourceNotFoundException;
 import com.nearpet.backend.photo.dto.CreatePhotoRequest;
 import com.nearpet.backend.photo.dto.PhotoResponse;
+import com.nearpet.backend.photo.dto.UpdatePhotoRequest;
 import com.nearpet.backend.photo.model.Photo;
 import com.nearpet.backend.photo.repository.PhotoRepository;
 import jakarta.annotation.PostConstruct;
@@ -169,6 +170,38 @@ public class PhotoService {
         return getPhotos();
     }
 
+    public PhotoResponse updatePhoto(Long id, UpdatePhotoRequest request, String requesterRole) {
+        ensureAdmin(requesterRole);
+
+        Photo target = photoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("수정할 사진 게시글을 찾을 수 없습니다."));
+
+        List<String> imageUrls = resolveImageUrls(target);
+        if (imageUrls.isEmpty()) {
+            throw new IllegalStateException("사진 게시글에 표시 가능한 이미지가 없습니다.");
+        }
+
+        String coverImageUrl = request.coverImageUrl().trim();
+        if (!imageUrls.contains(coverImageUrl)) {
+            throw new IllegalArgumentException("선택한 대표 이미지를 게시글에서 찾을 수 없습니다.");
+        }
+
+        List<String> storedFileNames = resolveStoredFileNames(target);
+        String nextStoredFileName = null;
+        int coverIndex = imageUrls.indexOf(coverImageUrl);
+        if (coverIndex >= 0 && coverIndex < storedFileNames.size()) {
+            nextStoredFileName = storedFileNames.get(coverIndex);
+        }
+
+        target.updatePostContent(
+                request.description() == null ? "" : request.description().trim(),
+                coverImageUrl,
+                nextStoredFileName
+        );
+
+        return toResponse(photoRepository.save(target));
+    }
+
     public void deletePhoto(Long id, String requesterRole) {
         ensureAdmin(requesterRole);
 
@@ -291,6 +324,17 @@ public class PhotoService {
         return photo.getImageUrl() == null || photo.getImageUrl().isBlank()
                 ? List.of()
                 : List.of(photo.getImageUrl());
+    }
+
+    private List<String> resolveStoredFileNames(Photo photo) {
+        List<String> storedFileNames = readJsonList(photo.getStoredFileNamesJson());
+        if (!storedFileNames.isEmpty()) {
+            return storedFileNames;
+        }
+
+        return photo.getStoredFileName() == null || photo.getStoredFileName().isBlank()
+                ? List.of()
+                : List.of(photo.getStoredFileName());
     }
 
     private String writeJson(List<String> values) {

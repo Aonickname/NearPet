@@ -6,6 +6,7 @@ function Admin() {
   const [reservations, setReservations] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [reservationForm, setReservationForm] = useState(null);
+  const [photoEditForm, setPhotoEditForm] = useState(null);
   const [photoForm, setPhotoForm] = useState({
     imageUrl: '',
     description: '',
@@ -63,6 +64,14 @@ function Admin() {
   function handlePhotoFormChange(event) {
     const { name, value } = event.target;
     setPhotoForm((current) => ({
+      ...current,
+      [name]: value,
+    }));
+  }
+
+  function handlePhotoEditFormChange(event) {
+    const { name, value } = event.target;
+    setPhotoEditForm((current) => ({
       ...current,
       [name]: value,
     }));
@@ -302,6 +311,40 @@ function Admin() {
     }
   }
 
+  function startPhotoEdit(photo) {
+    setPhotoEditForm({
+      id: photo.id,
+      description: photo.description || '',
+      coverImageUrl: photo.imageUrl,
+      imageUrls: photo.imageUrls || [photo.imageUrl],
+    });
+    setError('');
+  }
+
+  async function handlePhotoUpdate(event) {
+    event.preventDefault();
+    if (!photoEditForm) {
+      return;
+    }
+
+    setError('');
+
+    try {
+      await request(`/photos/${photoEditForm.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          description: photoEditForm.description,
+          coverImageUrl: photoEditForm.coverImageUrl,
+        }),
+      });
+      setPhotoEditForm(null);
+      showSuccess('사진 게시글이 수정되었습니다.');
+      await loadDashboard();
+    } catch (updateError) {
+      setError(updateError.message);
+    }
+  }
+
   return (
     <div className="admin-page">
       <div className="admin-header">
@@ -500,16 +543,62 @@ function Admin() {
                 {photo.featured && (
                   <span className="featured-badge">Home #{(photo.featuredOrder ?? 0) + 1}</span>
                 )}
-                <button
-                  type="button"
-                  className="danger"
-                  onClick={() => handlePhotoDelete(photo.id)}
-                >
-                  삭제
-                </button>
+                <div className="admin-actions">
+                  <button type="button" onClick={() => startPhotoEdit(photo)}>
+                    수정
+                  </button>
+                  <button
+                    type="button"
+                    className="danger"
+                    onClick={() => handlePhotoDelete(photo.id)}
+                  >
+                    삭제
+                  </button>
+                </div>
               </div>
             ))}
           </div>
+
+          {photoEditForm && (
+            <form className="admin-form photo-edit-form" onSubmit={handlePhotoUpdate}>
+              <h3>사진 게시글 수정</h3>
+              <textarea
+                name="description"
+                value={photoEditForm.description}
+                onChange={handlePhotoEditFormChange}
+                rows="3"
+                placeholder="사진 설명"
+              />
+
+              <div className="cover-picker">
+                <strong>게시글 대표 이미지</strong>
+                <div className="cover-picker-grid">
+                  {photoEditForm.imageUrls.map((imageUrl) => (
+                    <label
+                      key={`${photoEditForm.id}-${imageUrl}`}
+                      className={`cover-picker-item ${photoEditForm.coverImageUrl === imageUrl ? 'selected' : ''}`}
+                    >
+                      <input
+                        type="radio"
+                        name="coverImageUrl"
+                        value={imageUrl}
+                        checked={photoEditForm.coverImageUrl === imageUrl}
+                        onChange={handlePhotoEditFormChange}
+                      />
+                      <img src={imageUrl} alt="대표 이미지 선택 후보" />
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="admin-actions">
+                <button type="submit">저장</button>
+                <button type="button" onClick={() => setPhotoEditForm(null)}>
+                  취소
+                </button>
+              </div>
+            </form>
+          )}
         </section>
       </div>
     </div>

@@ -10,7 +10,6 @@ const LANDING_LINKS = {
   naverReservation: 'https://example.com/naver-reservation',
   kakaoReservation: 'https://open.kakao.com/o/sTvPW8li',
   nearpetReservation: '/home',
-  naverBlog: 'https://example.com/naver-blog',
 };
 
 const reservationButtons = [
@@ -35,13 +34,6 @@ const reservationButtons = [
     external: false,
     icon: <span className="brand-badge nearpet">NP</span>,
   },
-  {
-    key: 'naverBlog',
-    label: '네이버 블로그',
-    href: LANDING_LINKS.naverBlog,
-    external: true,
-    icon: <span className="brand-badge blog">b</span>,
-  },
 ];
 
 function Landing() {
@@ -63,7 +55,7 @@ function Landing() {
 
         <div className="landing-card">
           <div className="landing-logo-badge">np</div>
-          <h1>니어펫 포토</h1>
+          <h1 className="landing-brand-title">NearPet Photo</h1>
           <p>반려동물과 함께하는 가장 다정한 순간을 담아드립니다.</p>
 
           <div className="landing-socials">

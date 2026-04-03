@@ -89,6 +89,12 @@ public class Photo {
         return featuredOrder;
     }
 
+    public void updatePostContent(String description, String imageUrl, String storedFileName) {
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.storedFileName = storedFileName;
+    }
+
     public void updateFeatured(boolean featured, Integer featuredOrder) {
         this.featured = featured;
         this.featuredOrder = featuredOrder;
